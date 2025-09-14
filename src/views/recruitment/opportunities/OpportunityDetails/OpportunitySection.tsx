@@ -1,0 +1,103 @@
+import Card from '@/components/ui/Card'
+import { Opportunity } from '../OpportunityList/types'
+import { HiPencil } from 'react-icons/hi'
+import { useNavigate } from 'react-router'
+import { Tooltip } from '@/components/ui/Tooltip'
+import { RECRUITMENT_PREFIX_PATH } from '@/constants/route.constant'
+import Tag from '@/components/ui/Tag'
+
+const OpportunitySection = ({ opportunity }: { opportunity: Opportunity }) => {
+    const statusColor: Record<string, string> = {
+        active: 'bg-emerald-200 dark:bg-emerald-200 text-gray-900 dark:text-gray-900',
+        inactive: 'bg-red-200 dark:bg-red-200 text-gray-900 dark:text-gray-900',
+    }
+    const navigate = useNavigate()
+
+    const handleEdit = () => {
+        navigate(
+            `${RECRUITMENT_PREFIX_PATH}/opportunities/opportunity-edit/${opportunity.id}`,
+        )
+    }
+
+    return (
+        <Card>
+            <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="mb-0 truncate">{opportunity.title}</h3>
+                        <Tag
+                            className={
+                                statusColor[opportunity.status] ||
+                                'bg-gray-200 dark:bg-gray-200 text-gray-900 dark:text-gray-900'
+                            }
+                        >
+                            <span className="capitalize">
+                                {opportunity.status}
+                            </span>
+                        </Tag>
+                    </div>
+                    <div className="mt-1 text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2 flex-wrap">
+                        <span>{opportunity.department?.name}</span>
+                        <span className="hidden sm:inline">•</span>
+                        <span className="capitalize">
+                            {opportunity.jobType}
+                        </span>
+                    </div>
+                </div>
+                <Tooltip title="Edit opportunity">
+                    <button
+                        className="close-button button-press-feedback"
+                        type="button"
+                        onClick={handleEdit}
+                    >
+                        <HiPencil />
+                    </button>
+                </Tooltip>
+            </div>
+
+            <div
+                className="mt-4 prose prose-sm max-w-none dark:prose-invert"
+                dangerouslySetInnerHTML={{
+                    __html: opportunity.description || '',
+                }}
+            />
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded border border-gray-200 dark:border-gray-700 p-3 bg-gray-50 dark:bg-gray-900/20">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                        Job Type
+                    </div>
+                    <div className="mt-1 font-medium capitalize">
+                        {opportunity.jobType}
+                    </div>
+                </div>
+                <div className="rounded border border-gray-200 dark:border-gray-700 p-3 bg-gray-50 dark:bg-gray-900/20">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                        Salary Range
+                    </div>
+                    <div className="mt-1 font-medium">
+                        {opportunity.salary_min} - {opportunity.salary_max}
+                    </div>
+                </div>
+                <div className="rounded border border-gray-200 dark:border-gray-700 p-3 bg-gray-50 dark:bg-gray-900/20">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                        Department
+                    </div>
+                    <div className="mt-1 font-medium">
+                        {opportunity.department?.name}
+                    </div>
+                </div>
+                <div className="rounded border border-gray-200 dark:border-gray-700 p-3 bg-gray-50 dark:bg-gray-900/20">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                        Publish Scope
+                    </div>
+                    <div className="mt-1 font-medium capitalize">
+                        {opportunity.publishScope}
+                    </div>
+                </div>
+            </div>
+        </Card>
+    )
+}
+
+export default OpportunitySection
